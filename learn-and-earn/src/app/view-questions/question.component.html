@@ -1,0 +1,70 @@
+<!-- spinner -->
+<div class="d-flex justify-content-center">
+  <div class="spinner-border m-5" role="status" *ngIf="isLoading">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<!-- question template -->
+<div class="container" *ngIf="!isLoading">
+  <div class="card w-50 text-dark bg-light m-auto mt-5">
+    <h5 class="card-header">Q.{{ singleQuestion.questionNumber }} - {{ singleQuestion.question }}</h5>
+    <div class="card-body">
+      <form (submit)="evaluateQuestion(answer)" #answer="ngForm">
+        <div class="form-check" *ngFor="let item of singleQuestion.answers">
+          <input
+          class="form-check-input"
+          type="radio"
+          name="selectedAnswer"
+          [value]="item.value"
+          ngModel
+          #selectedAnswer="ngModel"
+           />
+          <label class="form-check-label">{{ item.key }}</label>
+        </div>
+        <div class="row text-center" role="group" aria-label="Basic outlined button group">
+          <div class="col-6">
+            <button type="submit" class="btn btn-outline-primary mt-3"
+              [disabled]="disableCheckBtnOnCorrectAnswer">Check</button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-outline-primary mt-3"
+             [disabled]="!isAnswered" (click)="onGetNextQuestion(singleQuestion.questionNumber)">Next</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- close the quiz -->
+  <button type="button" class="btn btn-outline-danger position-absolute top-0 end-0 mt-3 me-3"
+  data-bs-toggle="modal" data-bs-target="#closeModal">Finish Quiz</button>
+
+   <!-- point counter -->
+   <button type="button" class="btn btn-outline-success position-absolute top-0 start-0 mt-3 ms-3">
+     Points: {{points}}</button>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="closeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+aria-hidden="true" aria-labelledby="closeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="closeModalLabel">Finish the HTML Quiz?</h5>
+      </div>
+      <div class="modal-body">
+        <h6>1. You will be redirected to Home Page.</h6>
+        <h6>2. All your progress will be lost.</h6>
+        <h6>3. Your next attempt will start from 0 Points.</h6>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onFinishQuiz()">Yes</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- notification -->
+<app-notification></app-notification>
